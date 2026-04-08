@@ -1,7 +1,5 @@
 import React, { useRef } from "react";
-import Link from "next/link";
 import { motion } from "framer-motion";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -13,221 +11,183 @@ type ContactForm = HTMLFormElement;
 
 const Contact: React.FC = () => {
   const form = useRef<ContactForm>(null);
-
-  const cardVariants = {
-    hidden: { opacity: 0, y: 30, rotateX: 10 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      rotateX: 0,
-      transition: { duration: 0.6, ease: "easeOut" },
-    },
-    hover: { scale: 1.03, rotateY: 5 },
-  };
-
-  const buttonVariants = {
-    hover: { scale: 1.1, rotate: 2 },
-    tap: { scale: 0.95 },
-  };
+  const sectionRef = useRef<HTMLDivElement>(null);
 
   const sendEmail = (e: React.FormEvent<ContactForm>) => {
     e.preventDefault();
-
-    if (!form.current) return; // Ensure form is not null
+    if (!form.current) return;
 
     emailjs
       .sendForm(
         process.env.EMAIL_SERVICE_ID || "service_q60u8fg",
         process.env.TEMPLATE_ID || "template_6i25x6t",
         form.current,
-        process.env.EMAIL_PUBLIC_KEY || "wXXN5py-Z4IKnQK7j"
+        process.env.EMAIL_PUBLIC_KEY || "wXXN5py-Z4IKnQK7j",
       )
       .then(
         () => {
-          toast.success("Success! Your message has been sent successfully.");
-          console.log(form.current?.name);
+          toast.success("Success! Message delivered.");
           form.current?.reset();
         },
         (error: { text: string }) => {
-          toast.error("Error! Failed to send message. Please try again later.");
+          toast.error("Error! Delivery failed.");
           console.error("EmailJS error:", error.text);
-        }
+        },
       );
   };
 
   return (
     <motion.section
+      ref={sectionRef}
       id="contact"
-      className="py-20 bg-background"
+      className="py-32 bg-background relative overflow-hidden"
       initial={{ opacity: 0 }}
       whileInView={{ opacity: 1 }}
       viewport={{ once: true }}
       transition={{ duration: 0.7 }}
     >
-      <div className="container mx-auto px-4">
-        <motion.div
-          className="max-w-3xl mx-auto text-center mb-12"
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6, ease: "easeOut" }}
-        >
-          <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
-            Get In Touch
-          </h2>
-          <p className="text-lg text-muted-foreground">
-            Let’s collaborate on your next project. Reach out via the form or
-            connect with me on social media.
-          </p>
-        </motion.div>
-        <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
-          <motion.div
-            variants={cardVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            whileHover="hover"
+      <div className="container mx-auto px-4 relative z-10">
+        <div className="text-center mb-24 space-y-6">
+          <motion.h2
+            initial={{ opacity: 0, scale: 0.9 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            className="text-[12vw] font-black text-foreground/[0.03] absolute top-20 left-1/2 -translate-x-1/2 uppercase select-none pointer-events-none"
           >
-            <Card className="bg-card text-card-foreground">
-              <CardHeader>
-                <CardTitle>Send a Message</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <form ref={form} onSubmit={sendEmail} className="space-y-4">
+            Connect
+          </motion.h2>
+
+          <div className="relative z-10 space-y-4">
+            <h3 className="text-sm font-bold tracking-[0.5em] text-snow-accent uppercase">
+              Start a Conversation
+            </h3>
+            <h2 className="text-5xl md:text-7xl font-black tracking-tighter">
+              GET IN <span className="text-muted-foreground/30">TOUCH</span>
+            </h2>
+          </div>
+        </div>
+
+        <div className="grid lg:grid-cols-2 gap-20 max-w-7xl mx-auto">
+          {/* Contact Information */}
+          <div className="space-y-12">
+            <p className="text-2xl text-muted-foreground leading-relaxed max-w-md">
+              Available for{" "}
+              <span className="text-foreground font-bold italic">
+                global opportunities
+              </span>{" "}
+              and high-impact engineering projects.
+            </p>
+
+            <div className="space-y-8">
+              {[
+                {
+                  icon: <MailIcon className="w-6 h-6" />,
+                  label: "Email",
+                  value: "ahmedha258258@gmail.com",
+                  href: "mailto:ahmedha258258@gmail.com",
+                },
+                {
+                  icon: <LinkedinIcon className="w-6 h-6" />,
+                  label: "LinkedIn",
+                  value: "Ahmed Hamada",
+                  href: "https://www.linkedin.com/in/ahmed-hamada-a83309239/",
+                },
+                {
+                  icon: <GithubIcon className="w-6 h-6" />,
+                  label: "GitHub",
+                  value: "Ahmed Hamada",
+                  href: "https://github.com/snow6692",
+                },
+              ].map((item, index) => (
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0, x: -20 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  transition={{ delay: index * 0.1 }}
+                  className="flex items-center gap-6 group"
+                >
+                  <div className="w-14 h-14 rounded-2xl glass flex items-center justify-center group-hover:bg-snow-accent group-hover:text-background transition-all duration-500">
+                    {item.icon}
+                  </div>
+                  <div>
+                    <h4 className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-1">
+                      {item.label}
+                    </h4>
+                    <a
+                      target="_blank"
+                      href={item.href}
+                      className="text-xl font-bold hover:text-snow-accent transition-colors"
+                    >
+                      {item.value}
+                    </a>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+
+          {/* Contact Form */}
+          <motion.div
+            initial={{ opacity: 0, x: 20 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            className="glass p-10 md:p-12 rounded-[2rem] relative border-white/5"
+          >
+            <form ref={form} onSubmit={sendEmail} className="space-y-8">
+              <div className="grid md:grid-cols-2 gap-8">
+                <div className="space-y-2">
+                  <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">
+                    Name
+                  </label>
                   <Input
                     name="from_name"
-                    placeholder="Your Name"
-                    className="bg-muted"
+                    placeholder="Jane Doe"
+                    className="bg-transparent border-white/10 focus:border-snow-accent h-14 text-lg rounded-xl transition-all"
                     required
                   />
+                </div>
+                <div className="space-y-2">
+                  <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">
+                    Email
+                  </label>
                   <Input
                     name="from_email"
                     type="email"
-                    placeholder="Your Email"
-                    className="bg-muted"
+                    placeholder="jane@example.com"
+                    className="bg-transparent border-white/10 focus:border-snow-accent h-14 text-lg rounded-xl transition-all"
                     required
                   />
-                  <div className=" py-4">
-                    <Textarea
-                      name="message"
-                      placeholder="Your Message"
-                      rows={5}
-                      className="bg-muted"
-                      required
-                    />
-                  </div>
-                  <motion.div whileHover="hover" whileTap="tap">
-                    <Button type="submit" className="w-full">
-                      Send Message
-                    </Button>
-                  </motion.div>
-                </form>
-              </CardContent>
-            </Card>
-          </motion.div>
-          <motion.div
-            variants={cardVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            whileHover="hover"
-          >
-            <Card className="bg-card text-card-foreground">
-              <CardHeader>
-                <CardTitle>Contact Information</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-6">
-                <div className="flex items-start gap-4">
-                  <MailIcon className="w-5 h-5 text-primary mt-1" />
-                  <div>
-                    <h4 className="text-sm font-medium text-foreground">
-                      Email
-                    </h4>
-                    <Link
-                      href="mailto:ahmedha258258@gmail.com"
-                      className="text-muted-foreground hover:text-primary"
-                    >
-                      ahmedha258258@gmail.com
-                    </Link>
-                  </div>
                 </div>
-                <div className="flex items-start gap-4">
-                  <LinkedinIcon className="w-5 h-5 text-primary mt-1" />
-                  <div>
-                    <h4 className="text-sm font-medium text-foreground">
-                      LinkedIn
-                    </h4>
-                    <Link
-                      href="https://www.linkedin.com/in/ahmed-hamada-a83309239/"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-muted-foreground hover:text-primary"
-                    >
-                      linkedin.com/in/ahmed-hamada
-                    </Link>
-                  </div>
-                </div>
-                <div className="flex items-start gap-4">
-                  <GithubIcon className="w-5 h-5 text-primary mt-1" />
-                  <div>
-                    <h4 className="text-sm font-medium text-foreground">
-                      GitHub
-                    </h4>
-                    <Link
-                      href="https://github.com/snow6692"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-muted-foreground hover:text-primary"
-                    >
-                      github.com/ahmed-hamada
-                    </Link>
-                  </div>
-                </div>
-                <div className="flex space-x-4 pt-4">
-                  <motion.div
-                    variants={buttonVariants}
-                    whileHover="hover"
-                    whileTap="tap"
-                  >
-                    <Button asChild variant="outline" size="icon">
-                      <Link
-                        href="https://www.linkedin.com/in/ahmed-hamada-a83309239/"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        <LinkedinIcon className="w-5 h-5" />
-                      </Link>
-                    </Button>
-                  </motion.div>
-                  <motion.div
-                    variants={buttonVariants}
-                    whileHover="hover"
-                    whileTap="tap"
-                  >
-                    <Button asChild variant="outline" size="icon">
-                      <Link
-                        href="https://github.com/snow6692"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        <GithubIcon className="w-5 h-5" />
-                      </Link>
-                    </Button>
-                  </motion.div>
-                  <motion.div
-                    variants={buttonVariants}
-                    whileHover="hover"
-                    whileTap="tap"
-                  >
-                    <Button asChild variant="outline" size="icon">
-                      <Link href="mailto:ahmedha258258@gmail.com">
-                        <MailIcon className="w-5 h-5" />
-                      </Link>
-                    </Button>
-                  </motion.div>
-                </div>
-              </CardContent>
-            </Card>
+              </div>
+              <div className="space-y-2">
+                <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">
+                  Subject
+                </label>
+                <Input
+                  name="subject"
+                  placeholder="Inquiry"
+                  className="bg-transparent border-white/10 focus:border-snow-accent h-14 text-lg rounded-xl transition-all"
+                  required
+                />
+              </div>
+              <div className="space-y-2">
+                <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">
+                  Message
+                </label>
+                <Textarea
+                  name="message"
+                  placeholder="Describe your vision..."
+                  rows={5}
+                  className="bg-transparent border-white/10 focus:border-snow-accent text-lg rounded-xl transition-all resize-none"
+                  required
+                />
+              </div>
+              <Button
+                type="submit"
+                size="lg"
+                className="w-full h-16 rounded-xl bg-snow-accent text-background font-black uppercase tracking-widest hover:scale-[1.02] transition-transform"
+              >
+                Send Delivery
+              </Button>
+            </form>
           </motion.div>
         </div>
       </div>

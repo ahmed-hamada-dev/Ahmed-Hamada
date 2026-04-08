@@ -107,7 +107,7 @@ const Page = () => {
     <AnimatePresence>
       <motion.div
         ref={containerRef}
-        className="min-h-screen bg-background  text-foreground relative mx-auto"
+        className="min-h-screen bg-background text-foreground relative overflow-hidden mx-auto"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
@@ -116,7 +116,7 @@ const Page = () => {
         <canvas
           ref={canvasRef}
           className="absolute top-0 z-10 opacity-70 dark:opacity-50 pointer-events-none"
-          style={{ height: "100%" }}
+          style={{ height: "100%", left: 0, right: 0 }}
         />
 
         <Navbar />

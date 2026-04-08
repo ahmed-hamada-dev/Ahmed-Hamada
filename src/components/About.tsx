@@ -1,160 +1,116 @@
-import React from "react";
-import { CodeIcon, StarIcon } from "@radix-ui/react-icons";
-import { motion } from "framer-motion";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { BookOpenIcon, DatabaseIcon } from "lucide-react";
+import React, { useEffect, useRef } from "react";
+import { motion, useInView } from "framer-motion";
+import gsap from "gsap";
+import { CodeIcon, GlobeIcon } from "@radix-ui/react-icons";
+import { ServerIcon, CpuIcon } from "lucide-react";
 
 const About: React.FC = () => {
+  const sectionRef = useRef<HTMLDivElement>(null);
+  const isInView = useInView(sectionRef, { once: true, margin: "-100px" });
+
   const skills = [
     {
-      icon: <CodeIcon className="w-6 h-6 text-primary" />,
-      title: "Frontend Development",
-      description: "Building responsive interfaces with React and Next.js.",
-      techs: ["Next.js", "React", "Tailwind CSS", "TypeScript", "React Query"],
+      icon: <CodeIcon className="w-8 h-8 text-snow-accent" />,
+      title: "Frontend Architecture",
+      description: "Crafting pixel-perfect, highly interactive interfaces.",
     },
     {
-      icon: <DatabaseIcon className="w-6 h-6 text-primary" />,
-      title: "Backend Development",
-      description: "Creating robust APIs with Express and PostgreSQL.",
-      techs: [
-        "Nextjs",
-        "Node.js",
-        "Express",
-        "PostgreSQL",
-        "Prisma",
-        "REST APIs",
-      ],
+      icon: <ServerIcon className="w-8 h-8 text-snow-accent" />,
+      title: "Backend Engineering",
+      description: "Building resilient APIs and scalable server-side systems.",
     },
     {
-      icon: <BookOpenIcon className="w-6 h-6 text-primary" />,
+      icon: <CpuIcon className="w-8 h-8 text-snow-accent" />,
       title: "AI Integration",
-      description: "Leveraging AI APIs for intelligent features.",
-      techs: ["Vapi", "Gemini", "OpenAI"],
+      description: "Infusing applications with intelligent, agentic features.",
     },
     {
-      icon: <StarIcon className="w-6 h-6 text-primary" />,
-      title: "DevOps & Tools",
-      description: "Streamlining development with modern tools.",
-      techs: ["Vercel", "Git", "Docker", "Netlify"],
+      icon: <GlobeIcon className="w-8 h-8 text-snow-accent" />,
+      title: "Cloud & DevOps",
+      description: "Automated scaling and professional infrastructure management.",
     },
   ];
 
-  // Define unique variants for each card
-  const cardVariants = [
-    // Card 1: Slide from left with a slight upward tilt
-    {
-      hidden: { opacity: 0, x: -50, rotateX: 10, rotateY: -10 },
-      visible: {
-        opacity: 1,
-        x: 0,
-        rotateX: 0,
-        rotateY: 0,
-        transition: { duration: 0.6, ease: "easeOut", delay: 0.1 },
-      },
-      hover: { scale: 1.03, rotateY: 5, transition: { duration: 0.3 } },
-    },
-    // Card 2: Slide from right with a downward tilt
-    {
-      hidden: { opacity: 0, x: 50, rotateX: -10, rotateY: 10 },
-      visible: {
-        opacity: 1,
-        x: 0,
-        rotateX: 0,
-        rotateY: 0,
-        transition: { duration: 0.6, ease: "easeOut", delay: 0.2 },
-      },
-      hover: { scale: 1.03, rotateY: -5, transition: { duration: 0.3 } },
-    },
-    // Card 3: Fade in with a slight zoom and upward motion
-    {
-      hidden: { opacity: 0, y: 50, scale: 0.9 },
-      visible: {
-        opacity: 1,
-        y: 0,
-        scale: 1,
-        transition: { duration: 0.6, ease: "easeOut", delay: 0.3 },
-      },
-      hover: { scale: 1.05, rotateX: 5, transition: { duration: 0.3 } },
-    },
-    // Card 4: Fade in with a slight zoom and downward motion
-    {
-      hidden: { opacity: 0, y: -50, scale: 0.9 },
-      visible: {
-        opacity: 1,
-        y: 0,
-        scale: 1,
-        transition: { duration: 0.6, ease: "easeOut", delay: 0.4 },
-      },
-      hover: { scale: 1.05, rotateX: -5, transition: { duration: 0.3 } },
-    },
-  ];
+  useEffect(() => {
+    if (!isInView) return;
+
+    const aboutReveals = sectionRef.current?.querySelectorAll(".about-reveal");
+    const skillCards = sectionRef.current?.querySelectorAll(".skill-card");
+
+    if (!aboutReveals || !skillCards) return;
+
+    const tl = gsap.timeline({ defaults: { ease: "power4.out" } });
+
+    tl.fromTo(
+      aboutReveals,
+      { y: 50, opacity: 0 },
+      { y: 0, opacity: 1, duration: 1, stagger: 0.2 }
+    )
+    .fromTo(
+      skillCards,
+      { scale: 0.9, opacity: 0, y: 30 },
+      { scale: 1, opacity: 1, y: 0, duration: 0.8, stagger: 0.1, ease: "back.out(1.7)" },
+      "-=0.5"
+    );
+  }, [isInView]);
 
   return (
     <motion.section
+      ref={sectionRef}
       id="about"
-      className="py-20 bg-background"
-      initial={{ opacity: 0 }}
-      whileInView={{ opacity: 1 }}
-      viewport={{ once: true }}
-      transition={{ duration: 0.7 }}
+      className="py-32 bg-background relative overflow-hidden"
     >
-      <div className="container mx-auto px-4">
-        <motion.div
-          className="max-w-3xl mx-auto text-center mb-12"
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6, ease: "easeOut" }}
-        >
-          <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
-            About Me
-          </h2>
-          <p className="text-lg text-muted-foreground">
-            I&apos;m a passionate Fullstack Developer with a knack for building
-            modern web applications and integrating AI to solve real-world
-            problems.
-          </p>
-        </motion.div>
-        <div className="grid md:grid-cols-2 gap-8">
-          {skills.map((skill, index) => (
-            <motion.div
-              key={index}
-              variants={cardVariants[index]} // Apply unique variant for each card
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true }}
-              whileHover="hover"
-            >
-              <Card className="bg-card text-card-foreground">
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    {skill.icon}
-                    {skill.title}
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-muted-foreground mb-4">
-                    {skill.description}
-                  </p>
-                  <div className="flex flex-wrap gap-2">
-                    {skill.techs.map((tech) => (
-                      <motion.span
-                        key={tech}
-                        className="bg-muted text-muted-foreground px-2 py-1 rounded-md text-sm"
-                        whileHover={{
-                          scale: 1.1,
-                          backgroundColor: "var(--primary)",
-                          color: "var(--primary-foreground)",
-                        }}
-                      >
-                        {tech}
-                      </motion.span>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
-            </motion.div>
-          ))}
+      <div className="container mx-auto px-4 relative z-10">
+        <div className="grid lg:grid-cols-2 gap-20 items-center">
+          {/* Left Side: Content */}
+          <div className="space-y-10">
+            <div className="space-y-4">
+              <h2 className="about-reveal text-sm font-bold tracking-[0.3em] text-snow-accent uppercase">
+                The Architect
+              </h2>
+              <h3 className="about-reveal text-5xl md:text-7xl font-black tracking-tight leading-none">
+                CRAFTING <span className="text-muted-foreground/30">DIGITAL</span> PRECISION
+              </h3>
+            </div>
+
+            <p className="about-reveal text-xl text-muted-foreground leading-relaxed max-w-xl">
+              I specialize in bridging the gap between <span className="text-foreground font-bold">visionary design</span> and <span className="text-foreground font-bold">complex engineering</span>. My approach focuses on creating applications that are not just functional, but exceptional.
+            </p>
+
+            <div className="about-reveal grid grid-cols-2 gap-8 pt-8 border-t border-border">
+              <div>
+                <h4 className="text-4xl font-black mb-2">2+</h4>
+                <p className="text-sm text-muted-foreground uppercase tracking-widest">Years Experience</p>
+              </div>
+              <div>
+                <h4 className="text-4xl font-black mb-2">30+</h4>
+                <p className="text-sm text-muted-foreground uppercase tracking-widest">Projects Delivered</p>
+              </div>
+            </div>
+          </div>
+
+          {/* Right Side: Skills Grid */}
+          <div className="grid sm:grid-cols-2 gap-6">
+            {skills.map((skill, index) => (
+              <div
+                key={index}
+                className="skill-card glass p-8 rounded-3xl group hover:border-snow-accent transition-all duration-500"
+              >
+                <div className="mb-6 p-4 rounded-2xl bg-snow-accent/10 w-fit group-hover:scale-110 transition-transform">
+                  {skill.icon}
+                </div>
+                <h4 className="text-xl font-bold mb-3">{skill.title}</h4>
+                <p className="text-muted-foreground text-sm leading-relaxed">
+                  {skill.description}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Floating Background Text */}
+        <div className="absolute -bottom-10 -right-20 text-[20vw] font-black text-foreground/[0.02] pointer-events-none select-none uppercase tracking-tighter">
+          Engineering
         </div>
       </div>
     </motion.section>

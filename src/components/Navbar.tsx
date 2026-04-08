@@ -40,7 +40,7 @@ const Navbar = () => {
 
   return (
     <motion.nav
-      className={`sticky top-0 z-50 transition-all duration-300 ${
+      className={`sticky top-0 z-50 transition-all duration-300 overflow-x-hidden ${
         isScrolled ? "bg-card shadow-lg py-3" : "bg-transparent py-6"
       }`}
       initial={{ y: -100 }}
